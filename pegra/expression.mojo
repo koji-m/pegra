@@ -13,3 +13,10 @@ struct PChar(PExpression):
             return Optional[StringSlice[org]](seq[txt_len:])
         else:
             return Optional[StringSlice[org]](None)
+
+@fieldwise_init
+struct PAny(PExpression):
+    fn matches[org: ImmutableOrigin](self, seq: StringSlice[org]) -> Optional[StringSlice[org]]:
+        if len(seq) > 0:
+            return Optional[StringSlice[org]](seq[1:])
+        return Optional[StringSlice[org]](None)

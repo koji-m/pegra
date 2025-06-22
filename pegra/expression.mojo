@@ -1,4 +1,4 @@
-trait PExpression:
+trait PExpression(Copyable, Movable):
     fn matches[org: ImmutableOrigin](self, seq: StringSlice[org]) -> Optional[StringSlice[org]]:
         pass
 
@@ -19,4 +19,14 @@ struct PAny(PExpression):
     fn matches[org: ImmutableOrigin](self, seq: StringSlice[org]) -> Optional[StringSlice[org]]:
         if len(seq) > 0:
             return Optional[StringSlice[org]](seq[1:])
+        return Optional[StringSlice[org]](None)
+
+@fieldwise_init
+struct PNot[T: PExpression](PExpression):
+    var exp: T
+
+    fn matches[org: ImmutableOrigin](self, seq: StringSlice[org]) -> Optional[StringSlice[org]]:
+        var m = self.exp.matches(seq)
+        if not m:
+            return seq
         return Optional[StringSlice[org]](None)

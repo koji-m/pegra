@@ -1,5 +1,5 @@
 from testing import assert_equal, assert_true, assert_false
-from pegra.expression import PChar, PAny
+from pegra.expression import PChar, PAny, PNot
 
 fn test_pchar_matches() raises:
     var pchar = PChar("foo")
@@ -22,3 +22,14 @@ fn test_pany_not_matches() raises:
     var pany = PAny()
     var actual = pany.matches("")
     assert_false(actual)
+
+fn test_pnot_matches() raises:
+    var pnot = PNot(PChar("a"))
+    var actual = pnot.matches("abc")
+    assert_false(actual)
+
+fn test_pnot_not_matches() raises:
+    var pnot = PNot(PChar("b"))
+    var actual = pnot.matches("abc")
+    assert_true(actual)
+    assert_equal(actual.value(), StringSlice("abc"))

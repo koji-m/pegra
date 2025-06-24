@@ -1,5 +1,5 @@
 from testing import assert_equal, assert_true, assert_false
-from pegra.expression import PChar, PAny, PNot, PSeq
+from pegra.expression import PChar, PAny, PNot, PSeq, POre
 
 fn test_pchar_matches() raises:
     var pchar = PChar("foo")
@@ -43,4 +43,21 @@ fn test_pseq_matches() raises:
 fn test_pseq_not_matches() raises:
     var pseq = PSeq(PChar("a"), PChar("c"))
     var actual = pseq.matches("abc")
+    assert_false(actual)
+
+fn test_pore_matches_1() raises:
+    var pore = POre(PChar("a"), PChar("b"))
+    var actual = pore.matches("abc")
+    assert_true(actual)
+    assert_equal(actual.value(), StringSlice("bc"))
+
+fn test_pore_matches_2() raises:
+    var pore = POre(PChar("a"), PChar("b"))
+    var actual = pore.matches("bac")
+    assert_true(actual)
+    assert_equal(actual.value(), StringSlice("ac"))
+
+fn test_pore_not_matches() raises:
+    var pore = PSeq(PChar("a"), PChar("b"))
+    var actual = pore.matches("cab")
     assert_false(actual)

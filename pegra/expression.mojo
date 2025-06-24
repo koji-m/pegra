@@ -41,3 +41,14 @@ struct PSeq[T1: PExpression, T2: PExpression](PExpression):
         if not m:
             return Optional[StringSlice[org]](None)
         return self.exp2.matches(m.value())
+
+@fieldwise_init
+struct POre[T1: PExpression, T2: PExpression](PExpression):
+    var exp1: T1
+    var exp2: T2
+
+    fn matches[org: ImmutableOrigin](self, seq: StringSlice[org]) -> Optional[StringSlice[org]]:
+        var m = self.exp1.matches(seq)
+        if m:
+            return m
+        return self.exp2.matches(seq)

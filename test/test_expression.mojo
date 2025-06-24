@@ -1,5 +1,5 @@
 from testing import assert_equal, assert_true, assert_false
-from pegra.expression import PChar, PAny, PNot
+from pegra.expression import PChar, PAny, PNot, PSeq
 
 fn test_pchar_matches() raises:
     var pchar = PChar("foo")
@@ -33,3 +33,14 @@ fn test_pnot_not_matches() raises:
     var actual = pnot.matches("abc")
     assert_true(actual)
     assert_equal(actual.value(), StringSlice("abc"))
+
+fn test_pseq_matches() raises:
+    var pseq = PSeq(PChar("a"), PChar("b"))
+    var actual = pseq.matches("abc")
+    assert_true(actual)
+    assert_equal(actual.value(), StringSlice("c"))
+
+fn test_pseq_not_matches() raises:
+    var pseq = PSeq(PChar("a"), PChar("c"))
+    var actual = pseq.matches("abc")
+    assert_false(actual)
